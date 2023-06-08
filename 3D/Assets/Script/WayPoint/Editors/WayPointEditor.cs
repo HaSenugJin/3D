@@ -29,10 +29,20 @@ public class WayPointEditor : EditorWindow
                     Node node = NodeObject.AddComponent<Node>();
 
                     //node¿« º≥¡§
+                    SphereCollider coll = node.GetComponent<SphereCollider>();
+                    coll.radius = 0.2f;
 
                     NodeObject.transform.SetParent(Parent.transform);
                     NodeObject.transform.transform.position = new Vector3(
-                        Random.Range(-10.0f,10.0f),0.0f, Random.Range(-10.0f, 10.0f));
+                        Random.Range(-10.0f, 10.0f), 0.0f, Random.Range(-10.0f, 10.0f));
+
+                    if (1 < Parent.transform.childCount)
+                    {
+                        Parent.transform.GetChild(Parent.transform.childCount - 2).
+                            GetComponent<Node>().Next = node;
+
+                        node.Next = Parent.transform.GetChild(0).GetComponent<Node>();
+                    }
                 }
             }
 
