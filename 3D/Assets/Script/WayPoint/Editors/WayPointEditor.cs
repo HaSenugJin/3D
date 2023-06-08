@@ -25,12 +25,13 @@ public class WayPointEditor : EditorWindow
             {
                 if(Parent != null)
                 {
-                    GameObject NodeObject = new GameObject("Node");
+                    GameObject NodeObject = new GameObject();
+                    NodeObject.transform.name = "Node_" + Parent.transform.childCount;
                     Node node = NodeObject.AddComponent<Node>();
 
                     //node¿« º≥¡§
                     SphereCollider coll = node.GetComponent<SphereCollider>();
-                    coll.radius = 0.2f;
+                    coll.radius = 0.05f;
 
                     NodeObject.transform.SetParent(Parent.transform);
                     NodeObject.transform.transform.position = new Vector3(

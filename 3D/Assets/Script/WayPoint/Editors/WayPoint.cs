@@ -17,7 +17,7 @@ public class WayPoint : MonoBehaviour
         {
             Node node = perent.transform.GetChild(i).GetComponent<Node>();
 
-            Debug.DrawLine(node.transform.position, node.Next.transform.position);
+            //Debug.DrawLine(node.transform.position, node.Next.transform.position);
         }
     }
 }
