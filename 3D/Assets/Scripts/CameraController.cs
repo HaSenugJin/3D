@@ -17,6 +17,7 @@ public class CameraController : MonoBehaviour
     {
         camera = gameObject.GetComponent<Camera>();
 
+
         
     }
 
