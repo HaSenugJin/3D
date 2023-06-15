@@ -12,8 +12,11 @@ public class EnemyController : MonoBehaviour
     const int M = 0; // Matrix
 
     public Node Target = null;
-    public List<Vector3> vertices = new List<Vector3>();
+    public List<GameObject> vertices = new List<GameObject>();
+    public List<GameObject> bastList = new List<GameObject>();
+    public List<GameObject> OpenList = new List<GameObject>();
 
+    public List<GameObject> CloseList = new List<GameObject>();
     private float Speed;
 
     Vector3 LeftCheck;
@@ -27,6 +30,7 @@ public class EnemyController : MonoBehaviour
     [Range(1.0f, 2.0f)]
     public float scale;
 
+    private GameObject Parent;
 
     private void Awake()
     {
@@ -42,6 +46,7 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
+        Parent = new GameObject("Nodes"); 
         Speed = 5.0f;
 
         float x = 2.5f;
@@ -89,6 +94,14 @@ public class EnemyController : MonoBehaviour
                         temp[i].z);
                 }
 
+                GameObject startPoint = null;
+                float dis = 0.0f;
+                
+                float bastdistance = 10000000.0f;
+
+                OpenList.Clear();
+                CloseList.Clear();
+
                 vertices.Clear();
                 for (int i = 0; i < temp.Count; ++i)
                 {
@@ -104,10 +117,56 @@ public class EnemyController : MonoBehaviour
 
                     Vector3 v = matrix[M].MultiplyPoint(temp[i]);
 
-                    vertices.Add(v);
+                    vertices.Add(obj);
 
                     obj.transform.position = v;
-                    obj.AddComponent<MyGizmo>();
+                    obj.AddComponent<Node>();
+                    obj.transform.SetParent(Parent.transform);
+                    MyGizmo gizmo = obj.AddComponent<MyGizmo>();
+                    dis = Vector3.Distance(transform.position, v);
+
+                    if(dis < bastdistance)
+                    {
+                        bastdistance = dis;
+                        startPoint = obj;
+                    }
+                }
+                if(startPoint)
+                {
+                    startPoint.GetComponent<MyGizmo>().color = Color.red;
+                    OpenList.Add(startPoint);
+                }
+
+                
+                
+                Node MainNode = OpenList[0].GetComponent<Node>();
+                MainNode.Cost = 0.0f;
+                int Count = 0;
+
+                while(true)
+                {
+                    float OldDistance = 10000000.0f;
+                    int index = 0;
+                    for (int i = 0; i<vertices.Count;++i)
+                    {
+                        float Dis = Vector3.Distance(OpenList[0].transform.position, vertices[i].transform.position);
+
+                        if(Dis < OldDistance)
+                        {
+                            OldDistance = Dis;
+                            Node Nextnode = vertices[i].GetComponent<Node>();
+                            Nextnode.Cost = MainNode.Cost + Dis;
+
+                            index = i;
+                        }
+                    }
+                    
+                    //OpenList.Add(vertices[index].GetComponent<Node>());
+
+                    Count++;
+
+                    if (vertices.Count <= Count || 100 < Count)
+                        break;
                 }
             }
         }
@@ -136,7 +195,7 @@ public class EnemyController : MonoBehaviour
                     move = true;
             }
         }
-         */
+        */
     }
 
     private void FixedUpdate()
