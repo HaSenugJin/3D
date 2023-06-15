@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Next: {fileID: 130398442}
+  Cost: 0
 --- !u!135 &6483215
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -227,7 +228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9639d8b263065740bdfdac6501eeb8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Next: {fileID: 6483214}
+  Next: {fileID: 0}
+  Cost: 0
 --- !u!135 &130398443
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -707,7 +709,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
+  vertices: []
+  bastList: []
+  OpenList: []
   Angle: 0
+  scale: 0
 --- !u!135 &1486112247
 SphereCollider:
   m_ObjectHideFlags: 0
