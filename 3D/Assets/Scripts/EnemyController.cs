@@ -24,7 +24,7 @@ public class EnemyController : MonoBehaviour
     [Range(0.0f, 180.0f)]
     public float Angle;
 
-    private bool move;
+    private bool getNode;
 
     [Range(1.0f, 2.0f)]
     public float scale;
@@ -58,7 +58,7 @@ public class EnemyController : MonoBehaviour
 
         Angle = 45.0f;
 
-        move = false;
+        getNode = false;
 
         scale = 1.0f;
     }
@@ -71,28 +71,11 @@ public class EnemyController : MonoBehaviour
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))
             {
-                MeshFilter meshFilter = hit.transform.gameObject.GetComponent<MeshFilter>();
-
-                Vector3[] verticesPoint = meshFilter.mesh.vertices;
-
-                List<Vector3> temp = new List<Vector3>();
-
-                for (int i = 0; i < verticesPoint.Length; ++i)
+                if(hit.transform.tag != "Node")
                 {
-                    if (!temp.Contains(verticesPoint[i])
-                        && verticesPoint[i].y < transform.position.y + 0.05f
-                        && transform.position.y < verticesPoint[i].y + 0.05f)
-                    {
-                        temp.Add(verticesPoint[i]);
-                    }
-                }
+                    getNode = true;
 
-                for (int i = 0; i < temp.Count; ++i)
-                {
-                    temp[i] = new Vector3(
-                        temp[i].x,
-                        0.1f,
-                        temp[i].z);
+                    List<Vector3> zzz = GetVertex(hit.transform.gameObject);
                 }
 
                 GameObject startPoint = null;
@@ -165,25 +148,21 @@ public class EnemyController : MonoBehaviour
 
                     if (!OpenList.Contains(vertices[index].GetComponent<Node>()))
                     {
-
-
-
-                        /*
-                         * 조건 1
+                        Node OldNode = OpenList[OpenList.Count - 1];
+                        Node curent = vertices[index].GetComponent<Node>();
                         RaycastHit Hit;
 
-                        if (Physics.Raycast(origin(이전노드), direction(현재노드), out Hit, OldDistance))
+                        if (Physics.Raycast(OldNode.transform.position, curent.transform.position, out Hit, OldDistance))
                         {
                             if (hit.transform.tag != "Node")
                             {
-
+                                
                             }
                             else
                             {
 
                             }
                         }
-                        */
 
                         /*
                          * 조건 2
@@ -199,6 +178,41 @@ public class EnemyController : MonoBehaviour
             }
         }
 
+        List<Vector3> GetVertex(GameObject hitObject)
+        {
+            List<Vector3> VertexList = new List<Vector3>();
+
+            if (hitObject.transform.childCount != 0)
+            {
+                for (int i = 0; i < hitObject.transform.childCount; ++i)
+                {
+                    VertexList.AddRange(
+                        GetVertex(hitObject.transform.GetChild(i).gameObject));
+                }
+            }
+
+            MeshFilter meshFilter = hitObject.GetComponent<MeshFilter>();
+
+            if(meshFilter == null)
+            {
+                return VertexList;
+            }
+
+            Vector3[] verticesPoint = meshFilter.mesh.vertices;
+
+            for (int i = 0; i < verticesPoint.Length; ++i)
+            {
+                if (!VertexList.Contains(verticesPoint[i])
+                    && verticesPoint[i].y < transform.position.y + 0.05f
+                    && transform.position.y < verticesPoint[i].y + 0.05f)
+                {
+                    verticesPoint[i].y = 0.1f;
+                    VertexList.Add(verticesPoint[i]);
+                }
+            }
+
+            return VertexList;
+        }
 
         /*
         if (Target)
@@ -225,6 +239,7 @@ public class EnemyController : MonoBehaviour
         }
          */
     }
+
 
     private void FixedUpdate()
     {
@@ -265,7 +280,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        move = false;
+        getNode = false;
         
         /*
         if (Target.transform.name == other.transform.name)

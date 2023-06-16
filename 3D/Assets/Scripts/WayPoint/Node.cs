@@ -14,5 +14,7 @@ public class Node : MonoBehaviour
         SphereCollider coll = GetComponent<SphereCollider>();
         coll.radius = 0.2f;
         coll.isTrigger = true;
+
+        transform.tag = "Node";
     }
 }
