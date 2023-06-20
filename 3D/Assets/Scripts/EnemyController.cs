@@ -225,6 +225,7 @@ public class EnemyController : MonoBehaviour
                     }
                 }
 
+                /*
                 if (!bestNodes.Contains(OpenList[index]))
                 {
                     Node OldNode = bestNodes[bestNodes.Count - 1];
@@ -254,6 +255,7 @@ public class EnemyController : MonoBehaviour
                     else
                         break;
                 }
+                */
             }
 
             bestNodes.Add(EndNode);
@@ -261,7 +263,7 @@ public class EnemyController : MonoBehaviour
         }
 
 
-
+                
         /*
         if (Target)
         {
